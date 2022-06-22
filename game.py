@@ -96,4 +96,51 @@ def jogo():
             elif posicaoYSonic >= altura - alturaSonic:
                 posicaoYSonic = altura - alturaSonic
             gameDisplay.blit(bg, (0, 0))
-            
+            if direcao == True:
+                if posicaoY < largura-150:
+                    posicaoY = posicaoY + velocidade
+                else:
+                    pygame.mixer.Sound.play(somFogo)
+                    direcao = False
+                    posicaoX = random.randrange(0, (largura))
+                    velocidade = velocidade + 1
+                    pontos = pontos + 1
+            else:
+                if posicaoY >= 0:
+                    posicaoY = posicaoY - velocidade
+                elif posicaoY >= 0:
+                    pygame.mixer.Sound.play(somFogo)
+                    direcao = True
+                    posicaoX = random.randrange(0, largura)
+                    velocidade = velocidade + 1
+            if posicaoY > altura:
+                posicaoX = random.randrange(0, largura)
+                posicaoY = -10
+                pontos = pontos + 1
+                velocidade = velocidade + 1
+
+            gameDisplay.blit(fogo, (posicaoX, posicaoY))
+            gameDisplay.blit(sonic, (posicaoXSonic, posicaoYSonic))
+            fonte = pygame.font.Font("freesansbold.ttf", 20)
+            texto = fonte.render("Pontos: "+str(pontos), True, white)
+            gameDisplay.blit(texto, (20, 20))
+
+            sonicRect = sonic.get_rect()
+            sonicRect.x = posicaoXSonic
+            sonicRect.y = posicaoYSonic
+
+            fogoRect = fogo.get_rect()
+            fogoRect.x = posicaoX
+            fogoRect.y = posicaoY
+
+            if sonicRect.colliderect(fogoRect):
+                jogando = False
+                dead(pontos)
+            else:
+                print(posicaoY)
+                print(posicaoX)
+
+        pygameDisplay.update()
+        clock.tick(60)
+
+jogo()
